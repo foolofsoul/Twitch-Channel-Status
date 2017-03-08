@@ -1,0 +1,308 @@
+/*============================================================
+                ------ TABLE OF CONTENTS ------
+==============================================================
+
+    1. GENERAL
+    2. LOGO
+    3. FORM & INPUT
+
+==============================================================
+
+============================================================*/
+
+
+
+/*============================================================
+    1. GENERAL
+============================================================*/
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Oswald, Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+section {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  line-height: 1.5rem;
+  color: #fff;
+}
+
+
+/*============================================================
+    2. LOGO
+============================================================*/
+
+.main {
+  background-color: #9477AA;
+}
+
+.logo-container {
+  text-align: center;
+}
+
+.logo {
+  width: 200px;
+}
+
+
+/*============================================================
+    3. FORM & INPUT
+============================================================*/
+
+form {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#username,
+#btn {
+  padding: 8px;
+  font-family: "Ek Mukta", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 1.25rem;
+}
+
+#username {
+  width: 300px;
+  /*margin-right: 6px;*/
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border: 1px solid #fff;
+  background-color: #836599;
+  color: #fff;
+}
+
+#username:focus {
+  background-color: #795C8E;
+  outline: 0;
+}
+
+#username::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  font-style: italic;
+  color: rgba(255, 255, 255, .4);  
+}
+#username::-moz-placeholder { /* Firefox 19+ */
+  font-style: italic;
+  color: rgba(255, 255, 255, .4);  
+}
+#username:-ms-input-placeholder { /* IE 10+ */
+  font-style: italic;
+  color: rgba(255, 255, 255, .4);  
+}
+#username:-moz-placeholder { /* Firefox 18- */
+  font-style: italic;
+  color: rgba(255, 255, 255, .4);  
+}
+
+#btn {
+  padding-left: 12px;
+  padding-right: 12px;
+  border: 1px solid #fff;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 6px;
+  background-color: #fff;
+  color: #9477AA;
+  cursor: pointer;
+}
+
+#btn:hover {
+  background-color: rgba(255, 255, 255, .9);
+}
+
+
+/*============================================================
+    4. CHANNELS
+============================================================*/
+#dataSection {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  -o-flex-wrap: wrap;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.channel-item {
+  display: block;
+  width: 23%;
+  margin-bottom: 40px;
+  border: 1px solid #9477AA;
+  border-radius: 5px;
+  padding: 10px;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+@media (max-width: 1500px) {
+  .channel-item {
+    width: 32%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .channel-item {
+    width: 49%;
+  }
+}
+
+@media (max-width: 800px) {
+  .channel-item {
+    width: 100%;
+  }
+}
+
+.channel-item:hover {
+  border: 1px solid #573173;
+}
+
+.channel-header {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  justify-content: space-between;
+}
+
+.channel-title {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  -ms-align-items: center;
+  align-items: center;
+  margin-top: -10px;
+  margin-left: -10px;
+  margin-bottom: 0;
+  padding: 10px 20px 10px 15px;
+  border-bottom-right-radius: 5px;
+  font-family: "Ek Mukta", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  background-color: #865CA6;
+  /*color: #573173;*/
+  color: #fff;
+}
+
+.channel-item:hover .channel-title {
+  background-color: #573173;
+}
+
+.channel-logo {
+  display: inline-block;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.channel-logo img {
+  display: inline-block;
+  width: 30px;
+}
+
+/*===================  CHANNEL ONLINE/OFFLINE  ===================*/
+.channel-online,
+.channel-offline {
+  position: relative;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #61B71B;
+}
+
+.channel-offline {
+  background-color: #BA170B;
+}
+
+.channel-online:before,
+.channel-offline:before {
+  position: absolute;
+  top: -3px;
+  left: -40px;
+  font-size: .75rem;
+  color: #777;
+}
+
+.channel-online:before {
+  content: "ONLINE";
+}
+
+.channel-offline:before {
+  content: "OFFLINE";
+  left: -40px;
+}
+
+/*===================  CHANNEL FOOTER  ===================*/
+.channel-footer {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  justify-content: space-between;
+  -ms-align-items: center;
+  align-items: center;
+  margin-top: -15px;
+  color: #727272;
+}
+
+.channel-item:hover .channel-footer {
+  color: #464646;
+}
+
+.channel-game-img {
+  height: 138px;
+  border-radius: 4px;
+  overflow: hidden;
+  opacity: .85;
+}
+
+.channel-item:hover .channel-game-img {
+  opacity: 1;
+}
+
+.channel-status,
+.channel-game {
+  margin: 0;
+}
+
+.channel-status {
+  font-size: 1.25rem;
+}
+
+.channel-game {
+  line-height: 1;
+}
