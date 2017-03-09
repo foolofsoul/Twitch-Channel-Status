@@ -8,8 +8,9 @@
 		getUserID().then(function(id) {
 			return getUserStatus(id);
 		}).then(function(id){
-			getStreamStatus(id);
-		}).then(function(){
+			return getStreamStatus(id);
+		}).then(function(index){
+			createChannelItem(index);
 			// Make "channel-item"
 			/*
 				Make array that holds channel-name. Then create a function
@@ -48,7 +49,7 @@
 			xhr.onreadystatechange = function(){
 				if( this.readyState === 4 && this.status === 200 ){
 					channelsArr.push({userInfo: JSON.parse(xhr.responseText)})
-					dataSection.innerHTML += xhr.responseText;
+					// dataSection.innerHTML += xhr.responseText;
 					resolve(id);
 				}
 			}
@@ -61,24 +62,81 @@
 
 
 	function getStreamStatus(id){
-		var xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function(){
-			if(this.readyState === 4 && this.status === 200 ){
-				if (channelsArr.length === 1){
-					channelsArr[0].streamInfo = JSON.parse(xhr.responseText);
-					console.log(channelsArr[0].userInfo.display_name);
-					dataSection.innerHTML += "<br>" + xhr.responseText + "<br>";
-				} else if (channelsArr.length > 1){
-					channelsArr[channelsArr.length - 1].streamInfo = JSON.parse(xhr.responseText);
-					// console.log(channelsArr);
-					dataSection.innerHTML += "<br>" + xhr.responseText + "<br>";
+		return new Promise(function(resolve, reject) {
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function(){
+				if(this.readyState === 4 && this.status === 200 ){
+					if (channelsArr.length === 1){
+						channelsArr[0].streamInfo = JSON.parse(xhr.responseText);
+						console.log(channelsArr[0].userInfo.display_name);
+						// dataSection.innerHTML += "<br>" + xhr.responseText + "<br>";
+						resolve(channelsArr.length - 1);
+					} else if (channelsArr.length > 1){
+						channelsArr[channelsArr.length - 1].streamInfo = JSON.parse(xhr.responseText);
+						// console.log(channelsArr);
+						// dataSection.innerHTML += "<br>" + xhr.responseText + "<br>";
+						resolve(channelsArr.length - 1);
+					}
 				}
 			}
-		}
-		xhr.open('GET', 'https://api.twitch.tv/kraken/streams/'+id);
-		xhr.setRequestHeader('Client-ID', myClientID);
-		xhr.setRequestHeader('Accept', 'application/vnd.twitchtv.v5+json');
-		xhr.send();
+			xhr.open('GET', 'https://api.twitch.tv/kraken/streams/'+id);
+			xhr.setRequestHeader('Client-ID', myClientID);
+			xhr.setRequestHeader('Accept', 'application/vnd.twitchtv.v5+json');
+			xhr.send();
+		});
+	}
+
+	function createChannelItem(indexNum){
+		var channelItem = document.createElement('a'),
+				channelHeader = document.createElement('div'),
+				channelTitle = document.createElement('h4'),
+				channelLogo = document.createElement('span'),
+				channelLogoImg = document.createElement('img'),
+				channelOnOffline = document.createElement('span'),
+				channelFooter = document.createElement('div'),
+				channelInfo = document.createElement('div'),
+				channelStatus = document.createElement('h5'),
+				channelGame = document.createElement('p'),
+				channelGameDiv = document.createElement('div'),
+				channelGameImg = document.createElement('img');
+
+		channelItem.setAttribute('href', channelsArr[indexNum].userInfo.url);
+		channelItem.className = "channel-item";
+		channelHeader.className = "channel-header";
+		channelTitle.className = "channel-title";
+		channelLogo.className = "channel-logo";
+
+		channelLogoImg.setAttribute('src', channelsArr[indexNum].userInfo.logo || "https://cdn3.iconfinder.com/data/icons/happily-colored-snlogo/512/twitch.png");
+		channelLogoImg.setAttribute('alt', channelsArr[indexNum].userInfo.display_name + " Logo");
+
+		channelOnOffline.className = channelsArr[indexNum].streamInfo.stream ? "channel-online" : "channel-offline";
+		channelFooter.className = "channel-footer";
+		channelInfo.className = "channel-info";
+		
+		channelStatus.className = "channel-status";
+		channelStatus.textContent = channelsArr[indexNum].userInfo.status;
+
+		channelGame.className = "channel-game";
+		channelGame.textContent = channelsArr[indexNum].userInfo.game;
+
+		channelGameDiv.className = "channel-game-img";
+		channelGameImg.setAttribute("src", "https://static-cdn.jtvnw.net/ttv-boxart/" + encodeURI(channelsArr[indexNum].userInfo.game) + "-100x138.jpg")
+		channelGameImg.setAttribute("alt", channelsArr[indexNum].userInfo.game + " Box Art");
+
+
+		channelLogo.appendChild(channelLogoImg);
+		channelTitle.appendChild(channelLogo);
+		channelTitle.innerHTML += channelsArr[indexNum].userInfo.display_name;
+		channelHeader.appendChild(channelTitle);
+		channelHeader.appendChild(channelOnOffline);
+		channelInfo.appendChild(channelStatus);
+		channelInfo.appendChild(channelGame);
+		channelGameDiv.appendChild(channelGameImg);
+		channelFooter.appendChild(channelInfo);
+		channelFooter.appendChild(channelGameDiv);
+		channelItem.appendChild(channelHeader);
+		channelItem.appendChild(channelFooter);
+		dataSection.appendChild(channelItem);
 	}
 
 	
