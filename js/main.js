@@ -36,9 +36,15 @@
 				xhr.onreadystatechange = function(){
 					if( this.readyState === 4 && this.status === 200 ){
 						var data = JSON.parse(xhr.responseText);
-						var userID = data.users[0]._id
-						// Pass user id into create user function
-						resolve(userID);
+
+						if( data._total === 0 ){
+							reject('Twitch.tv channel "' + userName + '" does not exist');
+						} else {
+							var userID = data.users[0]._id
+							// Pass user id into create user function
+							resolve(userID);	
+						}
+
 					}
 				}
 				xhr.open('GET', 'https://api.twitch.tv/kraken/users?login='+userName);
@@ -83,7 +89,8 @@
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function(){
 				if( this.readyState === 4 && this.status === 200 ){
-					channelsArr.push({userInfo: JSON.parse(xhr.responseText)});
+					var data = JSON.parse(xhr.responseText)
+					channelsArr.push({userInfo: data});
 					resolve(id);
 				}
 			}

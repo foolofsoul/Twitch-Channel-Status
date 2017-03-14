@@ -189,9 +189,6 @@ fieldset {
   }
 }
 
-.channel-item:nth-child(4n){
-  margin-right: 0;
-}
 
 .channel-item {
   display: block;
@@ -205,6 +202,10 @@ fieldset {
   text-decoration: none;
   background-color: #fff;
   overflow: hidden;
+}
+
+.channel-item:nth-child(4n){
+  margin-right: 0;
 }
 
 @media (max-width: 1500px) {
