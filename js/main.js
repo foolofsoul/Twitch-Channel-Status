@@ -79,6 +79,7 @@
 	// Get user status information
 	function getUserStatus(id){
 		return new Promise(function(resolve, reject) {
+			document.getElementById('username').value = "";
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function(){
 				if( this.readyState === 4 && this.status === 200 ){
