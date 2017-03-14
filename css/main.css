@@ -5,6 +5,8 @@
     1. GENERAL
     2. LOGO
     3. FORM & INPUT
+    4. CHANNELS
+    5. MODAL
 
 ==============================================================
 
@@ -23,8 +25,18 @@
 }
 
 body {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  -o-flex-direction: column;
+  flex-direction: column;
   margin: 0;
-  height: 100vh;
+  min-height: 100vh;
   font-family: Oswald, Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 
@@ -380,4 +392,39 @@ fieldset {
 
 .channel-item:hover .channel-game-img {
   opacity: 1;
+}
+
+
+/*============================================================
+    4. MODAL
+============================================================*/
+
+@keyframes show-modal {
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+#modal-div {
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  z-index: 50;
+}
+
+#modal {
+  display: inline-block;
+  padding: 50px;
+  font-family: "Ek Mukta", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  color: #fff;
+  background-color: #5d5d5d;
+  box-shadow: 0px 0px 15px 3px rgba(0,0,0,.5);
+  z-index: 100;
+  animation-name: show-modal;
+  animation-duration: 4s;
+  opacity: 0;
 }

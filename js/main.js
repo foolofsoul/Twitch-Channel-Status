@@ -1,46 +1,80 @@
 (function(){
 	var myClientID = '2qt106tvw8s4lzzfr1nuvfhziihkuf',
+			body = document.getElementsByTagName('body')[0],
 			btn = document.getElementById('btn'),
 			dataSection = document.getElementById('dataSection'),
-			channelsArr = [];
+			modalTimeout,
+			channelsArr = [],
+			channelNames = [];
 
-	btn.addEventListener('click', function(){
-		getUserID().then(function(id) {
-			return getUserStatus(id);
-		}).then(function(id){
-			return getStreamStatus(id);
-		}).then(function(index){
-			createChannelItem(index);
-			// Make "channel-item"
-			/*
-				Make array that holds channel-name. Then create a function
-				that iterates over each name and updates it if name already
-				exists, in order to not have duplicates. If name does not exist
-				add channel-item
-			*/
-		})
+	btn.addEventListener('click' || 'keyup', function(event){
+		getUserID(event)
+			.then(function(id) {
+				return getUserStatus(id);
+			}, 
+			function(error){
+				var maxSearchError = createMaxSearchErrorModal(error);
+				showErrorModal(maxSearchError);
+			})
+			.then(function(id){
+				return getStreamStatus(id);
+			})
+			.then(function(index){
+				createChannelItem(index);
+			});
 	});
 
-	function getUserID() {
+	function getUserID(event) {
+		event.preventDefault();
 		return new Promise(function(resolve, reject) {
-			event.preventDefault();
-			var userName = document.getElementById('username').value,
-				xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function(){
-				if( this.readyState === 4 && this.status === 200 ){
-					var data = JSON.parse(xhr.responseText);
-					var userID = data.users[0]._id
-					// Pass user id into create user function
-					resolve(userID);
+			if( (event || event.which === 13) && channelsArr.length < 10) {
+				var userName = document.getElementById('username').value,
+					xhr = new XMLHttpRequest();
+				if ( userName === "" ){
+					reject("Please enter a Twitch.tv channel name.");
 				}
+				xhr.onreadystatechange = function(){
+					if( this.readyState === 4 && this.status === 200 ){
+						var data = JSON.parse(xhr.responseText);
+						var userID = data.users[0]._id
+						// Pass user id into create user function
+						resolve(userID);
+					}
+				}
+				xhr.open('GET', 'https://api.twitch.tv/kraken/users?login='+userName);
+				xhr.setRequestHeader('Client-ID', myClientID);
+				xhr.setRequestHeader('Accept', 'application/vnd.twitchtv.v5+json');
+				xhr.send();
+			} else {
+				reject("You can only have up to 10 searches.");
 			}
-			xhr.open('GET', 'https://api.twitch.tv/kraken/users?login='+userName);
-			xhr.setRequestHeader('Client-ID', myClientID);
-			xhr.setRequestHeader('Accept', 'application/vnd.twitchtv.v5+json');
-			xhr.send();
 		});
 	}
 
+	function createMaxSearchErrorModal(errorText){
+		var modalDiv = document.createElement('div');
+		var modal = document.createElement('div');
+		modalDiv.id = 'modal-div';
+	  modal.textContent = errorText;
+	  modal.id = "modal";
+	  modalDiv.appendChild(modal);
+	  return modalDiv;
+	}
+
+	function showErrorModal(createdError){
+	  body.appendChild(createdError);
+  	var modalDiv = document.getElementById('modal-div');
+  	modalDiv.addEventListener('click', function(e){
+  		if( e.target === modalDiv ){
+  			body.removeChild(modalDiv);
+  			clearTimeout(modalTimeout);
+  		}
+  	});
+  	
+  	modalTimeout = setTimeout(function(){
+	    body.removeChild(modalDiv);
+	  }, 4000);  	
+	}
 
 	// Get user status information
 	function getUserStatus(id){
@@ -48,8 +82,7 @@
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function(){
 				if( this.readyState === 4 && this.status === 200 ){
-					channelsArr.push({userInfo: JSON.parse(xhr.responseText)})
-					// dataSection.innerHTML += xhr.responseText;
+					channelsArr.push({userInfo: JSON.parse(xhr.responseText)});
 					resolve(id);
 				}
 			}
@@ -67,14 +100,10 @@
 			xhr.onreadystatechange = function(){
 				if(this.readyState === 4 && this.status === 200 ){
 					if (channelsArr.length === 1){
-						channelsArr[0].streamInfo = JSON.parse(xhr.responseText);
-						console.log(channelsArr[0].userInfo.display_name);
-						// dataSection.innerHTML += "<br>" + xhr.responseText + "<br>";
+						channelsArr[0].streamInfo = JSON.parse(this.responseText);
 						resolve(channelsArr.length - 1);
 					} else if (channelsArr.length > 1){
-						channelsArr[channelsArr.length - 1].streamInfo = JSON.parse(xhr.responseText);
-						// console.log(channelsArr);
-						// dataSection.innerHTML += "<br>" + xhr.responseText + "<br>";
+						channelsArr[channelsArr.length - 1].streamInfo = JSON.parse(this.responseText);
 						resolve(channelsArr.length - 1);
 					}
 				}
